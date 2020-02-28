@@ -51,7 +51,10 @@
       "huaweicloud": ["huaweicloud/src"],
       "@spinnaker/tencentcloud": ["tencentcloud/src"],
       "tencentcloud/*": ["tencentcloud/src/*"],
-      "tencentcloud": ["tencentcloud/src"]
+      "tencentcloud": ["tencentcloud/src"],
+      "@spinnaker/yandex": ["yandex/src"],
+      "yandex/*": ["yandex/src/*"],
+      "yandex/": ["yandex/src"]
     },
     "pretty": true,
     "removeComments": false,

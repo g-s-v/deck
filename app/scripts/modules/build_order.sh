@@ -20,6 +20,7 @@ ModuleDeps () {
       oracle) echo "core" ;;
       titus) echo "amazon docker core" ;;
       tencentcloud) echo "core";;
+      yandex) echo "core" ;;
       *)
         echo "Unknown module: $1"
         exit 1

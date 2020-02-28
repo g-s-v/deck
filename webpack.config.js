@@ -132,6 +132,8 @@ function configure(env, webpackOpts) {
         '@spinnaker/azure': path.join(__dirname, 'app', 'scripts', 'modules', 'azure', 'src'),
         tencentcloud: path.join(__dirname, 'app', 'scripts', 'modules', 'tencentcloud', 'src'),
         '@spinnaker/tencentcloud': path.join(__dirname, 'app', 'scripts', 'modules', 'tencentcloud', 'src'),
+        yandex: path.join(__dirname, 'app', 'scripts', 'modules', 'yandex', 'src'),
+        '@spinnaker/yandex': path.join(__dirname, 'app', 'scripts', 'modules', 'yandex', 'src'),
       },
     },
     module: {
