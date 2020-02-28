@@ -37,8 +37,6 @@ class ServerGroupDiskDescriptions extends React.Component<IServerGroupDiskDescri
     const { application, serverGroup } = this.props;
     const disks: IGceDisk[] = get(serverGroup, 'launchConfig.instanceTemplate.properties.disks', []);
     const statefulOperationsEnabled: boolean = StatefulMIGService.statefulMigsEnabled();
-    const canUpdateBootImage =
-      statefulOperationsEnabled && disks.some(disk => StatefulMIGService.isDiskStateful(disk.deviceName, serverGroup));
 
     return disks.map(disk => {
       if (disk.boot) {
@@ -46,13 +44,11 @@ class ServerGroupDiskDescriptions extends React.Component<IServerGroupDiskDescri
           <React.Fragment key={disk.deviceName}>
             <dt>
               Boot Disk
-              {canUpdateBootImage && (
-                <UpdateBootImageButton
-                  application={application}
-                  bootImage={ServerGroupDiskDescriptions.getDiskImageName(disk)}
-                  serverGroup={serverGroup}
-                />
-              )}
+              <UpdateBootImageButton
+                application={application}
+                bootImage={ServerGroupDiskDescriptions.getDiskImageName(disk)}
+                serverGroup={serverGroup}
+              />
             </dt>
             <dd>{ServerGroupDiskDescriptions.getDiskTypeLabel(disk)}</dd>
             <dd>{ServerGroupDiskDescriptions.getDiskImageLabel(disk)}</dd>

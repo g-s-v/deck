@@ -32,6 +32,10 @@ import { v2InstanceArchetypeSelector } from 'core/serverGroup/configure/common/v
 import { v2InstanceTypeSelector } from 'core/serverGroup/configure/common/v2InstanceTypeSelector.component';
 import { INumberListProps } from 'core/forms/numberList/NumberList';
 import { numberListWrapperComponent } from 'core/forms/numberList/numberList.component';
+import { imageSourceSelectorComponent } from 'core/artifact/imageSourceSelector.component';
+import { IImageSourceProps } from 'core/artifact/ImageSource';
+import { bakeStageChooseOsComponent } from 'core/pipeline/config/stages/bake/bakeStageChooseOs.component';
+import { IBakeStageChooseOsProps } from 'core/pipeline/config/stages/bake/BakeStageChooseOsProps';
 
 // prettier-ignore
 export class NgReactInjector extends ReactInject {
@@ -43,6 +47,9 @@ export class NgReactInjector extends ReactInject {
   public ButtonBusyIndicator: React.ComponentClass<IButtonBusyIndicatorProps>                   = angular2react('buttonBusyIndicator', buttonBusyIndicatorComponent, this.$injectorProxy) as any;
   public EntitySource: React.ComponentClass<IEntitySourceProps>                                 = angular2react('entitySource', entitySourceComponent, this.$injectorProxy) as any;
   public HelpField: React.ComponentClass<IHelpFieldProps>                                       = angular2react('helpFieldWrapper', helpFieldWrapperComponent, this.$injectorProxy) as any;
+  public InsightLayout: React.ComponentClass<IInsightLayoutProps>                               = angular2react('insightLayout', insightLayoutComponent, this.$injectorProxy) as any;
+  public ImageSourceSelector: React.ComponentClass<IImageSourceProps>                           = angular2react('imageSourceSelector', imageSourceSelectorComponent, this.$injectorProxy) as any;
+  public PipelineBakeStageChooseOs: React.ComponentClass<IBakeStageChooseOsProps>               = angular2react('bakeStageChooseOs', bakeStageChooseOsComponent, this.$injectorProxy) as any;
   public InstanceArchetypeSelector: React.ComponentClass<IInstanceArchetypeSelectorProps>       = angular2react('v2InstanceArchetypeSelector', v2InstanceArchetypeSelector, this.$injectorProxy) as any;
   public InstanceTypeSelector: React.ComponentClass<IInstanceTypeSelectorProps>                 = angular2react('v2InstanceTypeSelector', v2InstanceTypeSelector, this.$injectorProxy);
   public LegacySpinner: React.ComponentClass<ILegacySpinnerProps>                               = angular2react('spinnerWrapper', spinnerWrapperComponent, this.$injectorProxy) as any;

@@ -1,12 +1,13 @@
 import { IComponentOptions, module } from 'angular';
 
-const imageSourceSelectorComponent: IComponentOptions = {
+export const imageSourceSelectorComponent: IComponentOptions = {
   bindings: {
     command: '=',
     imageSources: '<',
     helpFieldKey: '@',
     idField: '@',
     imageSourceText: '<',
+    onChange: '<?',
   },
   controllerAs: 'ctrl',
   template: `
