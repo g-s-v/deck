@@ -18,6 +18,7 @@ export interface IYandexCreateServerGroupArtifactSettingsProps {
   pipeline: IPipeline;
 }
 
+//todo: delete
 export class YandexServerGroupArtifactSettings extends React.Component<IYandexCreateServerGroupArtifactSettingsProps>
   implements IWizardPageComponent<IYandexServerGroupCommand> {
   public static get LABEL() {

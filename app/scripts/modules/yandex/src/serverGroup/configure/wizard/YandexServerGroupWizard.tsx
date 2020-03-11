@@ -24,7 +24,6 @@ import { YandexServerGroupInstanceTemplateSettings } from './sections/instanceTe
 import { YandexServerGroupAdvancedSettings } from './sections/advancedSettings/AdvancedSettings.yandex';
 import { Observable, Subject } from 'rxjs';
 import { IYandexServiceAccount, YandexServiceAccountReader } from 'yandex/serviceAccount';
-import { FormikProps } from 'formik';
 import { IYandexImage, YandexImageReader } from 'yandex/image';
 import { HealthCheck } from './sections/healthcheck/HealthCheck';
 
@@ -60,6 +59,8 @@ export class YandexServerGroupWizard extends React.Component<
 
   public static show(props: IYandexCreateServerGroupProps): Promise<IYandexServerGroupCommand> {
     const modalProps = { dialogClassName: 'wizard-modal modal-lg' };
+    //todo: вернуть
+    props.command.imageSource = 'priorStage';
     return ReactModal.show(YandexServerGroupWizard, props, modalProps);
   }
 
@@ -85,7 +86,7 @@ export class YandexServerGroupWizard extends React.Component<
     this.destroy$.next();
   }
 
-  private loadServiceAccounts = (formik: FormikProps<IYandexServerGroupCommand>, credentials: string): void => {
+  private loadServiceAccounts = (credentials: string): void => {
     if (credentials) {
       this.setState({ serviceAccountsLoading: true });
       Observable.fromPromise(YandexServiceAccountReader.getServiceAccounts(credentials))
@@ -118,8 +119,8 @@ export class YandexServerGroupWizard extends React.Component<
     }
   };
 
-  private accountChanged = (formik: FormikProps<IYandexServerGroupCommand>, account: string): void => {
-    this.loadServiceAccounts(formik, account);
+  private accountChanged = (account: string): void => {
+    this.loadServiceAccounts(account);
     this.loadImages(account);
   };
 
@@ -209,42 +210,12 @@ export class YandexServerGroupWizard extends React.Component<
                   serviceAccountsLoading={serviceAccountsLoading}
                   imageLoading={imageLoading}
                   allImages={allImages}
-                  accountChanged={(account: string) => this.accountChanged(formik, account)}
+                  accountChanged={(account: string) => this.accountChanged(account)}
                   dismissModal={dismissModal}
                 />
               )}
             />
 
-            {command.viewState.showImageSourceSelector && (
-              <WizardPage
-                label="Artifact"
-                wizard={wizard}
-                order={nextIdx()}
-                render={({ innerRef }) => (
-                  <>
-                    <ImageSourceSelector
-                      ref={innerRef}
-                      command={command}
-                      idField={'imageSource'}
-                      helpFieldKey={'yandex.image.source'}
-                      imageSourceText={command.viewState.imageSourceText}
-                      onChange={imageSource => {
-                        formik.setFieldValue('imageSource', imageSource);
-                      }}
-                      imageSources={['artifact', 'priorStage']}
-                    />
-                    {formik.values.imageSource === 'artifact' && (
-                      <YandexServerGroupArtifactSettings
-                        ref={innerRef}
-                        formik={formik}
-                        pipeline={pipeline}
-                        stage={stage}
-                      />
-                    )}
-                  </>
-                )}
-              />
-            )}
             <WizardPage
               label="Deploy policy"
               wizard={wizard}

@@ -4,7 +4,7 @@ import './logo/yandex.logo.less';
 
 import { YandexServerGroupTransformer } from 'yandex/serverGroup';
 import { YandexServerGroupActions } from 'yandex/serverGroup/details/YandexServerGroupActions';
-import { yandexServerGroupDetailsGetter } from './serverGroup/details/yandexServerGroupDetailsGetter';
+import { yandexServerGroupDetailsGetter } from './serverGroup/details/YandexServerGroupDetailsGetter';
 import { YandexServerGroupDetailsSection } from 'yandex/serverGroup/details/sections/YandexServerGroupDetailsSection';
 import { YandexCapacityDetailsSection } from './serverGroup/details/sections/YandexCapacityDetailsSection';
 import { YandexLogsDetailsSection } from 'yandex/serverGroup/details/sections/YandexLogsDetailsSection';
@@ -20,7 +20,7 @@ import 'yandex/pipeline/stages/bake/yandexBakeStage.module.ts';
 import { module } from 'angular';
 import { SUBNET_RENDERER } from 'yandex/subnet';
 
-export const YANDEX_MODULE = 'spinnaker.gce';
+export const YANDEX_MODULE = 'spinnaker.yandex';
 module(YANDEX_MODULE, [SUBNET_RENDERER]).config(() => {
   CloudProviderRegistry.registerProvider('yandex', {
     name: 'Yandex',
