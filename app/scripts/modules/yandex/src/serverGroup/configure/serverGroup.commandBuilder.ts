@@ -91,6 +91,7 @@ export class YandexServerGroupCommandBuilder {
         disableStrategySelection: false,
         disableImageSelection: true,
         showImageSourceSelector: true,
+        // imageSourceText: 'priorStage',
       },
       serviceAccountId: conf.serviceAccountId,
       deployPolicy: _.cloneDeep(conf.deployPolicy),

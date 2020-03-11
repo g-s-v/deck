@@ -58,6 +58,8 @@ export class YandexServerGroupWizard extends React.Component<
 
   public static show(props: IYandexCreateServerGroupProps): Promise<IYandexServerGroupCommand> {
     const modalProps = { dialogClassName: 'wizard-modal modal-lg' };
+    //todo: вернуть
+    props.command.imageSource = 'priorStage';
     return ReactModal.show(YandexServerGroupWizard, props, modalProps);
   }
 

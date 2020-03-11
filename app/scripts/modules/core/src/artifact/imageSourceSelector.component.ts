@@ -36,5 +36,23 @@ export const imageSourceSelectorComponent: IComponentOptions = {
   `,
 };
 
+export const imageSourceSelectorWrapperComponent: IComponentOptions = {
+  bindings: { command: '<', imageSources: '<', helpFieldKey: '<', idField: '<', imageSourceText: '<', onChange: '<?' },
+  template: `
+    <image-source-selector
+      command="$ctrl.command"
+      id-field={{$ctrl.idField}}
+      image-sources="$ctrl.imageSources"
+      help-field-key={{$ctrl.helpFieldKey}}
+      image-source-text="$ctrl.imageSourceText"
+      on-change="$ctrl.onChange"
+      >
+    </image-source-selector>
+  `,
+};
+
+//todo: delete
 export const IMAGE_SOURCE_SELECTOR_COMPONENT = 'spinnaker.core.artifacts.expected.image.selector';
-module(IMAGE_SOURCE_SELECTOR_COMPONENT, []).component('imageSourceSelector', imageSourceSelectorComponent);
+module(IMAGE_SOURCE_SELECTOR_COMPONENT, [])
+  .component('imageSourceSelector', imageSourceSelectorComponent)
+  .component('imageSourceSelectorWrapper', imageSourceSelectorWrapperComponent);
