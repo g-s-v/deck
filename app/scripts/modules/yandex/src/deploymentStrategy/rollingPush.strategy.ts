@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-export interface IImageSourceProps {
-  command: any;
-  imageSources: string[];
-  helpFieldKey: string;
-  idField: string;
-  imageSourceText: string;
-  onChange(imageSource: string): void;
-}
+import { DeploymentStrategyRegistry } from '@spinnaker/core';
+
+DeploymentStrategyRegistry.registerStrategy({
+  label: 'Rolling Update',
+  description: `Sequential updates of instances in a group depending on the desired deployment policy.`,
+  key: 'rollingupdate',
+  providerRestricted: true,
+});

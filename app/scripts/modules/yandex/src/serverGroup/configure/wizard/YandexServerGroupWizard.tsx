@@ -60,6 +60,11 @@ export class YandexServerGroupWizard extends React.Component<
     const modalProps = { dialogClassName: 'wizard-modal modal-lg' };
     //todo: вернуть
     props.command.imageSource = 'priorStage';
+
+    let strategyKey = props.command.strategy;
+    if (strategyKey == 'rollingpush') {
+      props.command.strategy = 'rollingupdate';
+    }
     return ReactModal.show(YandexServerGroupWizard, props, modalProps);
   }
 

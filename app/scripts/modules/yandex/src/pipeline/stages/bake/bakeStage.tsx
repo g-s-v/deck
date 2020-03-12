@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-import { BakeryReader, IStageConfigProps } from 'core/pipeline';
+import { BakeryReader, FormikStageConfig, IStageConfigProps } from 'core/pipeline';
 
 import { ArtifactIcon, CheckboxInput, ReactSelectInput, TextInput } from '@spinnaker/core';
 import * as React from 'react';
 import { Observable, Subject } from 'rxjs';
 import { IBaseOsOption } from 'core/pipeline/config/stages/bake/bakeStageChooseOs.component';
-import { FormikStageConfig } from '../../../../../core/src/pipeline';
-import { FormikFormField } from '../../../../../core/src/presentation/forms/fields';
-import { IExpectedArtifact } from '../../../../../core/src/domain';
+import { FormikFormField } from 'core/presentation/forms/fields';
+import { IExpectedArtifact } from 'core/domain';
 import Select, { Option } from 'react-select';
-import { find, isEmpty, map } from 'lodash';
-import { HelpField } from '../../../../../core/src/help';
+import { find, map } from 'lodash';
+import { HelpField } from 'core/help';
 
 export interface IYandexBakeStageState {
   expectedArtifacts: IExpectedArtifact[];
@@ -175,7 +174,7 @@ export class YandexBakeStage extends React.Component<IStageConfigProps, IYandexB
                 )}
               />
               <FormikFormField
-                name="stage.templateFileName"
+                name="templateFileName"
                 label="Template File Name"
                 input={props => <TextInput {...props} inputClassName={'form-control input-sm'} />}
               />

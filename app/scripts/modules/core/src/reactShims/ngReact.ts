@@ -30,8 +30,6 @@ import { v2InstanceArchetypeSelector } from 'core/serverGroup/configure/common/v
 import { v2InstanceTypeSelector } from 'core/serverGroup/configure/common/v2InstanceTypeSelector.component';
 import { INumberListProps } from 'core/forms/numberList/NumberList';
 import { numberListWrapperComponent } from 'core/forms/numberList/numberList.component';
-import { imageSourceSelectorWrapperComponent } from 'core/artifact/imageSourceSelector.component';
-import { IImageSourceProps } from 'core/artifact/ImageSource';
 import IInjectorService = angular.auto.IInjectorService;
 
 // prettier-ignore
