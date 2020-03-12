@@ -17,6 +17,7 @@ import { YandexServerGroupCommandBuilder } from './serverGroup/configure/serverG
 import { YandexServerGroupWizard } from 'yandex/serverGroup/configure';
 import { YandexImageReader } from './image';
 import 'yandex/pipeline/stages/bake/yandexBakeStage.module.ts';
+import 'yandex/deploymentStrategy/rollingPush.strategy.ts';
 import { module } from 'angular';
 import { SUBNET_RENDERER } from 'yandex/subnet';
 
@@ -73,4 +74,4 @@ module(YANDEX_MODULE, [SUBNET_RENDERER]).config(() => {
   });
 });
 
-DeploymentStrategyRegistry.registerProvider('yandex', ['custom', 'redblack', 'rollingpush']);
+DeploymentStrategyRegistry.registerProvider('yandex', ['custom', 'redblack', 'rollingupdate']);

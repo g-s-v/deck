@@ -19,6 +19,7 @@ import {
   SubnetReader,
   TaskReason,
   TextInput,
+  IDeploymentStrategy,
 } from '@spinnaker/core';
 
 import { IYandexServerGroupCommand } from 'yandex/domain/configure/IYandexServerGroupCommand';
@@ -144,9 +145,15 @@ export class YandexServerGroupBasicSettings
     this.props.formik.setFieldValue('reason', reason);
   };
 
-  private strategyChanged = (values: IYandexServerGroupCommand, strategy: any) => {
-    values.onStrategyChange && values.onStrategyChange(values, strategy);
-    this.props.formik.setFieldValue('strategy', strategy.key);
+  private strategyChanged = (_: IYandexServerGroupCommand, strategy: IDeploymentStrategy) => {
+    let strategyKey = strategy.key;
+    if (strategyKey == 'rollingupdate') {
+      // todo: support suitable strategy for Yandex.Cloud in orca
+      // We made this because rolling update is the main strategy for Yandex.Cloud users. And this strategy is similar
+      // to aws strategy, but without any additional parameters.
+      strategyKey = 'rollingpush';
+    }
+    this.props.formik.setFieldValue('strategy', strategyKey);
   };
 
   private onStrategyFieldChange = (key: string, value: any) => {

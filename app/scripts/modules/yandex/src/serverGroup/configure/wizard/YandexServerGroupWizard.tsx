@@ -5,7 +5,6 @@ import {
   IModalComponentProps,
   IPipeline,
   IStage,
-  NgReact,
   noop,
   ReactInjector,
   ReactModal,
@@ -18,7 +17,6 @@ import { IYandexServerGroupCommand } from 'yandex/domain/configure/IYandexServer
 import { YandexServerGroupBasicSettings } from 'yandex/serverGroup/configure/wizard/sections/basicSettings/BasicSettings.yandex';
 import * as React from 'react';
 import { ServerGroupTemplateSelection } from 'yandex/serverGroup/configure';
-import { YandexServerGroupArtifactSettings } from './sections/artifactSettings/ArtifactSettings.yandex';
 import { YandexServerGroupDeployPolicySettings } from './sections/configurationSettings/DeployPolicySettings.yandex';
 import { YandexServerGroupInstanceTemplateSettings } from './sections/instanceTemplateSettings/InstanceTemplateSettings.yandex';
 import { YandexServerGroupAdvancedSettings } from './sections/advancedSettings/AdvancedSettings.yandex';
@@ -61,6 +59,11 @@ export class YandexServerGroupWizard extends React.Component<
     const modalProps = { dialogClassName: 'wizard-modal modal-lg' };
     //todo: вернуть
     props.command.imageSource = 'priorStage';
+
+    let strategyKey = props.command.strategy;
+    if (strategyKey == 'rollingpush') {
+      props.command.strategy = 'rollingupdate';
+    }
     return ReactModal.show(YandexServerGroupWizard, props, modalProps);
   }
 
@@ -163,9 +166,7 @@ export class YandexServerGroupWizard extends React.Component<
   public render(): React.ReactElement<YandexServerGroupWizard> {
     const {
       loading,
-      pipeline,
       requiresTemplateSelection,
-      stage,
       taskMonitor,
       serviceAccounts,
       serviceAccountsLoading,
@@ -173,7 +174,6 @@ export class YandexServerGroupWizard extends React.Component<
       allImages,
     } = this.state;
     const { application, command, dismissModal, title } = this.props;
-    const { ImageSourceSelector } = NgReact;
 
     if (requiresTemplateSelection) {
       return (
