@@ -146,14 +146,7 @@ export class YandexServerGroupBasicSettings
   };
 
   private strategyChanged = (_: IYandexServerGroupCommand, strategy: IDeploymentStrategy) => {
-    let strategyKey = strategy.key;
-    if (strategyKey == 'rollingupdate') {
-      // todo: support suitable strategy for Yandex.Cloud in orca
-      // We made this because rolling update is the main strategy for Yandex.Cloud users. And this strategy is similar
-      // to aws strategy, but without any additional parameters.
-      strategyKey = 'rollingpush';
-    }
-    this.props.formik.setFieldValue('strategy', strategyKey);
+    this.props.formik.setFieldValue('strategy', strategy.key);
   };
 
   private onStrategyFieldChange = (key: string, value: any) => {

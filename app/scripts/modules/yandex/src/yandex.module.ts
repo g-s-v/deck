@@ -17,7 +17,7 @@ import { YandexServerGroupCommandBuilder } from './serverGroup/configure/serverG
 import { YandexServerGroupWizard } from 'yandex/serverGroup/configure';
 import { YandexImageReader } from './image';
 import 'yandex/pipeline/stages/bake/yandexBakeStage.module.ts';
-import 'yandex/deploymentStrategy/rollingPush.strategy.ts';
+import 'yandex/deploymentStrategy/rollingUpdate.strategy.ts';
 import { module } from 'angular';
 import { SUBNET_RENDERER } from 'yandex/subnet';
 
