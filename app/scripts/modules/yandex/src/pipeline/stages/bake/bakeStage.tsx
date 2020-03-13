@@ -16,7 +16,14 @@
 
 import { BakeryReader, FormikStageConfig, IStageConfigProps } from 'core/pipeline';
 
-import { ArtifactIcon, CheckboxInput, ReactSelectInput, TextInput } from '@spinnaker/core';
+import {
+  ArtifactIcon,
+  CheckboxInput,
+  ExpectedArtifactService,
+  MapEditorInput,
+  ReactSelectInput,
+  TextInput,
+} from '@spinnaker/core';
 import * as React from 'react';
 import { Observable, Subject } from 'rxjs';
 import { IBaseOsOption } from 'core/pipeline/config/stages/bake/bakeStageChooseOs.component';
@@ -32,7 +39,6 @@ export interface IYandexBakeStageState {
   optionsLoading: boolean;
 }
 
-//todo: improve
 export class YandexBakeStage extends React.Component<IStageConfigProps, IYandexBakeStageState> {
   private destroy$ = new Subject();
 
@@ -40,26 +46,8 @@ export class YandexBakeStage extends React.Component<IStageConfigProps, IYandexB
     super(props);
     props.stage.cloudProvider = 'yandex';
     props.stage.region = 'ru-central1';
-    // this.state = {
-    //   expectedArtifacts: ExpectedArtifactService.getExpectedArtifactsAvailableToStage(props.stage, props.pipeline),
-    //   baseOsOptions: [],
-    //   optionsLoading: true,
-    // };
     this.state = {
-      expectedArtifacts: [
-        {
-          id: 'id1',
-          displayName: 'art1',
-          usePriorArtifact: true,
-          useDefaultArtifact: true,
-          matchArtifact: { id: 'art1', type: 's3/object' },
-        } as IExpectedArtifact,
-        {
-          id: 'id2',
-          displayName: 'art2',
-          matchArtifact: { id: 'art3', type: 'docker/image' },
-        } as IExpectedArtifact,
-      ],
+      expectedArtifacts: ExpectedArtifactService.getExpectedArtifactsAvailableToStage(props.stage, props.pipeline),
       baseOsOptions: [],
       optionsLoading: true,
     };
@@ -152,16 +140,8 @@ export class YandexBakeStage extends React.Component<IStageConfigProps, IYandexB
                       label: a.displayName,
                       value: a.id,
                     }))}
-                    // disabled={isEmpty(fetchStages.result)}
-
-                    // onChange={options => this.props.updateStageField(
-                    //   map(options, o => ({
-                    //     artifactId: o.value,
-                    //   })),
-                    // )}
                     optionRenderer={this.renderArtifact}
                     placeholder="Select an artifact..."
-                    // value={this.props.packageArtifactIds.filter(b => b.artifactId).map(b => b.artifactId)}
                     valueRenderer={this.renderArtifact}
                   />
                 )}
@@ -178,73 +158,18 @@ export class YandexBakeStage extends React.Component<IStageConfigProps, IYandexB
                 label="Template File Name"
                 input={props => <TextInput {...props} inputClassName={'form-control input-sm'} />}
               />
+              <div className="sp-margin-m-bottom">
+                <div className="sm-label-center">
+                  <b>Extended Attributes</b>
+                </div>
+                <FormikFormField
+                  name="extendedAttributes"
+                  input={props => (
+                    <MapEditorInput {...props} allowEmptyValues={true} addButtonLabel="Add Extended Attribute" />
+                  )}
+                />
+              </div>
             </div>
-            // <stage-config-field
-            //   label="Template File Name"
-            //   help-key="pipeline.config.bake.templateFileName"
-            //   ng-if="bakeStageCtrl.showTemplateFileName()"
-            // >
-            //   <input type="text" class="form-control input-sm" ng-model="stage.templateFileName" />
-            // </stage-config-field>
-            //     <stage-config-field
-            //       label="Account Name"
-            //       help-key="pipeline.config.gce.bake.accountName"
-            //       ng-if="bakeStageCtrl.showAccountName()"
-            //     >
-            //       <input type="text" class="form-control input-sm" ng-model="stage.accountName" />
-            //     </stage-config-field>
-            //     <stage-config-field
-            //       label="Extended Attributes"
-            //       help-key="pipeline.config.bake.extendedAttributes"
-            //       ng-if="bakeStageCtrl.showExtendedAttributes()"
-            //     >
-            //       <table class="table table-condensed packed">
-            //         <thead>
-            //           <tr>
-            //             <th style="width:40%">Key</th>
-            //             <th style="width:60%">Value</th>
-            //             <th class="text-right">Actions</th>
-            //           </tr>
-            //         </thead>
-            //         <tbody>
-            //           <tr ng-repeat="(key,value) in stage.extendedAttributes">
-            //             <ªtd>
-            //               <strong class="small">{{key}}</strong>
-            //             </td>
-            //             <td>
-            //               <input
-            //                 type="text"
-            //                 ng-model="stage.extendedAttributes[key]"
-            //                 value="{{value}}"
-            //                 class="form-control input-sm"
-            //               />
-            //             </td>
-            //             <td class="text-right">
-            //               <a class="small" href ng-click="bakeStageCtrl.removeExtendedAttribute(key)">Remove</a>
-            //             </td>
-            //           </tr>
-            //         </tbody>
-            //         <tfoot>
-            //           <tr>
-            //             <td colspan="7">
-            //               <button class="btn btn-block btn-sm add-new" ng-click="bakeStageCtrl.addExtendedAttribute()">
-            //                 <span class="glyphicon glyphicon-plus-sign"></span> Add Extended Attribute
-            //               </button>
-            //             </td>
-            //           </tr>
-            //         </tfoot>
-            //       </table>
-            //     </stage-config-field>
-            //     <stage-config-field
-            //       label="Var File Name"
-            //       help-key="pipeline.config.bake.varFileName"
-            //       ng-if="bakeStageCtrl.showVarFileName()"
-            //     >
-            //       <input type="text" class="form-control input-sm" ng-model="stage.varFileName" />
-            //     </stage-config-field>
-            //     <stage-config-field label="Base Image" help-key="pipeline.config.gce.bake.baseImage">
-            //       <input type="text" class="form-control input-sm" ng-model="stage.baseAmi" />
-            //     </stage-config-field>
           )}
         />
       </div>
