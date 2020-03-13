@@ -1,6 +1,8 @@
 import { BakeryReader, IStageConfigProps, StageConfigField } from 'core/pipeline';
 
-import { CheckboxInput, NgReact, ReactSelectInput } from '@spinnaker/core';
+import { BakeryReader, FormikStageConfig, IStageConfigProps } from 'core/pipeline';
+
+import { ArtifactIcon, CheckboxInput, ReactSelectInput, TextInput } from '@spinnaker/core';
 import * as React from 'react';
 import { Observable, Subject } from 'rxjs';
 import { IBaseOsOption } from 'core/pipeline/config/stages/bake/bakeStageChooseOs.component';

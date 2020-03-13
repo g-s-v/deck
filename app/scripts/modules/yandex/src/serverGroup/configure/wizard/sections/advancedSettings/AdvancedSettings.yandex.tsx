@@ -4,7 +4,6 @@ import {
   CheckboxInput,
   FormikFormField,
   IWizardPageComponent,
-  MapEditor,
   MapEditorInput,
   ReactSelectInput,
   TextInput,
