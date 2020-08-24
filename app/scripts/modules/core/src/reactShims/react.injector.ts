@@ -18,6 +18,7 @@ import { ProviderServiceDelegate } from '../cloudProvider/providerService.delega
 import { SecurityGroupReader } from '../securityGroup/securityGroupReader.service';
 import { ServerGroupWriter } from '../serverGroup/serverGroupWriter.service';
 import { StateEvents } from './state.events';
+import { LoadBalancerReader } from 'core/loadBalancer';
 
 export abstract class ReactInject {
   protected $injector: IInjectorService;
@@ -58,6 +59,7 @@ export class CoreReactInject extends ReactInject {
   public get securityGroupReader() { return this.$injector.get('securityGroupReader') as SecurityGroupReader; }
   public get serverGroupWriter() { return this.$injector.get('serverGroupWriter') as ServerGroupWriter; }
   public get stateEvents() { return this.$injector.get('stateEvents') as StateEvents; }
+  public get loadBalancerReader() {return this.$injector.get('loadBalancerReader') as LoadBalancerReader;}
 
   private createStateService(): StateService {
     const wrappedState = Object.create(this.$injector.get('$state')) as StateService;
