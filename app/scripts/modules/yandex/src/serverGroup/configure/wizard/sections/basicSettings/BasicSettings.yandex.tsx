@@ -5,10 +5,13 @@ import { FormikErrors, FormikProps } from 'formik';
 import {
   AccountService,
   Application,
+  CheckboxInput,
   DeploymentStrategySelector,
   FormikFormField,
   HelpField,
   IAccount,
+  IDeploymentStrategy,
+  IFormInputProps,
   IModalComponentProps,
   IServerGroup,
   ISubnet,
@@ -19,7 +22,6 @@ import {
   SubnetReader,
   TaskReason,
   TextInput,
-  IDeploymentStrategy,
 } from '@spinnaker/core';
 
 import { IYandexServerGroupCommand } from 'yandex/domain/configure/IYandexServerGroupCommand';
@@ -293,11 +295,21 @@ export class YandexServerGroupBasicSettings
           )}
           <div className="sp-margin-m-bottom">
             <FormikFormField
-              name={'groupSize'}
+              name={'targetSize'}
               fastField={false}
               required={true}
               input={props => <TextInput type="number" min={0} max={100} {...props} />}
               label="Number of Instances"
+            />
+          </div>
+          <div className="sp-margin-m-bottom">
+            <FormikFormField
+              fastField={false}
+              label="Traffic"
+              name="enableTraffic"
+              input={(inputProps: IFormInputProps) => (
+                <CheckboxInput text={'Send client requests to new instances'} {...inputProps} />
+              )}
             />
           </div>
           <div className="sp-margin-m-bottom">
@@ -318,6 +330,7 @@ export class YandexServerGroupBasicSettings
           </div>
 
           {!values.viewState.disableStrategySelection && values.selectedProvider && (
+            // todo: поменять на YandexDeploymentStrategySelector.tsx
             <DeploymentStrategySelector
               command={values}
               onFieldChange={this.onStrategyFieldChange}

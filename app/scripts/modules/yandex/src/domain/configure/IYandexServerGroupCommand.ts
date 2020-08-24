@@ -1,23 +1,19 @@
 import { IArtifact, IServerGroupCommand } from '@spinnaker/core';
-import {
-  IAutoScalePolicy,
-  IDeployPolicy,
-  IHealthCheckSpec,
-  IInstanceTemplate,
-  ILoadBalancerIntegration,
-} from 'yandex/domain';
+import { IAutoScalePolicy, IDeployPolicy, IHealthCheckSpec, IInstanceTemplate, ITargetGroupSpec } from 'yandex/domain';
 
 export interface IYandexServerGroupCommand extends IServerGroupCommand {
   imageSource: string;
   applicationArtifact?: IYandexArtifact;
   zones: string[];
-  groupSize: number;
+  targetSize: number;
   serviceAccountId: string;
-  autoScalePolicy: IAutoScalePolicy; //todo(briginets): support
+  autoScalePolicy: IAutoScalePolicy;
   deployPolicy: IDeployPolicy;
   instanceTemplate: IInstanceTemplate;
-  loadBalancerIntegration: ILoadBalancerIntegration;
-  healthCheckSpecs?: IHealthCheckSpec[];
+  targetGroupSpec: ITargetGroupSpec;
+  enableTraffic: boolean;
+  balancers?: { [key: string]: IHealthCheckSpec[] };
+  healthCheckSpecs: IHealthCheckSpec[];
   labels?: { [key: string]: string };
 }
 

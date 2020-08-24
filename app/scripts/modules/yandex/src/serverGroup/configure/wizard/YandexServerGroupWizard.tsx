@@ -23,7 +23,8 @@ import { YandexServerGroupAdvancedSettings } from './sections/advancedSettings/A
 import { Observable, Subject } from 'rxjs';
 import { IYandexServiceAccount, YandexServiceAccountReader } from 'yandex/serviceAccount';
 import { IYandexImage, YandexImageReader } from 'yandex/image';
-import { HealthCheck } from './sections/healthcheck/HealthCheck';
+import { HealthChecks } from './sections/healthcheck/HealthChecks';
+import { LoadBalancer } from './sections/loadBalancer/LoadBalancer';
 
 export interface IYandexCreateServerGroupProps extends IModalComponentProps {
   application: Application;
@@ -57,9 +58,6 @@ export class YandexServerGroupWizard extends React.Component<
 
   public static show(props: IYandexCreateServerGroupProps): Promise<IYandexServerGroupCommand> {
     const modalProps = { dialogClassName: 'wizard-modal modal-lg' };
-    //todo: вернуть
-    props.command.imageSource = 'priorStage';
-
     return ReactModal.show(YandexServerGroupWizard, props, modalProps);
   }
 
@@ -228,21 +226,13 @@ export class YandexServerGroupWizard extends React.Component<
               label="Autohealing policy"
               wizard={wizard}
               order={nextIdx()}
-              render={({ innerRef }) => <HealthCheck ref={innerRef} formik={formik} />}
+              render={({ innerRef }) => <HealthChecks ref={innerRef} fieldName={'healthCheckSpecs'} formik={formik} />}
             />
             <WizardPage
               label="Load Balancer"
               wizard={wizard}
               order={nextIdx()}
-              render={({ innerRef }) => (
-                <div className="form-group">
-                  <div className="col-md-11">
-                    <div ref={innerRef}>
-                      <p>It'll be soon. Stay tuned!</p>
-                    </div>
-                  </div>
-                </div>
-              )}
+              render={({ innerRef }) => <LoadBalancer application={application} ref={innerRef} formik={formik} />}
             />
             <WizardPage
               label="Advanced settings"

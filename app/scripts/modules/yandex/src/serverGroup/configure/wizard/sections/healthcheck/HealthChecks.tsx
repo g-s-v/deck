@@ -1,38 +1,53 @@
 import { FormikProps } from 'formik';
 
 import { FormikFormField, NumberInput, SelectInput, TextInput } from '@spinnaker/core';
-import { IYandexServerGroupCommand } from 'yandex/domain/configure/IYandexServerGroupCommand';
 import { IHealthCheckSpec } from 'yandex/domain';
 import * as React from 'react';
+import { FormikProps } from 'formik';
+import { IYandexServerGroupCommand } from 'yandex/domain/configure/IYandexServerGroupCommand';
+import _ from 'lodash';
 
 export interface IHealthCheckProps {
+  fieldName: string;
   formik: FormikProps<IYandexServerGroupCommand>;
 }
 
-export class HealthCheck extends React.Component<IHealthCheckProps> {
+export interface IHealthCheckState {
+  healthCheckSpecs: IHealthCheckSpec[];
+}
+
+export class HealthChecks extends React.Component<IHealthCheckProps, IHealthCheckState> {
+  constructor(props: IHealthCheckProps) {
+    super(props);
+    this.state = { healthCheckSpecs: _.get(props.formik.values, props.fieldName) as IHealthCheckSpec[] };
+  }
+
   private removeHeathCheck = (index: number) => {
-    this.props.formik.values.healthCheckSpecs.splice(index, 1);
-    this.forceUpdate();
+    this.state.healthCheckSpecs.splice(index, 1);
+    this.updateField();
   };
 
   private addHealthCheck = () => {
-    if (!this.props.formik.values.healthCheckSpecs) {
-      this.props.formik.values.healthCheckSpecs = [];
-    }
-    this.props.formik.values.healthCheckSpecs.push({
+    this.state.healthCheckSpecs.push({
       type: 'HTTP',
       port: 80,
       path: '/ping',
       interval: 5,
-      timeout: 5,
+      timeout: 4,
       unhealthyThreshold: 6,
       healthyThreshold: 2,
     } as IHealthCheckSpec);
     this.forceUpdate();
   };
 
+  private updateField = () => {
+    this.props.formik.setFieldValue(this.props.fieldName, this.state.healthCheckSpecs);
+    this.forceUpdate();
+  };
+
   public render() {
-    const { formik } = this.props;
+    const { fieldName } = this.props;
+    const { healthCheckSpecs } = this.state;
 
     return (
       <div className="form-group">
@@ -49,44 +64,47 @@ export class HealthCheck extends React.Component<IHealthCheckProps> {
               </tr>
             </thead>
             <tbody>
-              {formik.values.healthCheckSpecs?.map((_, index) => (
+              {healthCheckSpecs.map((spec, index) => (
                 <tr>
                   <td>
                     <FormikFormField
-                      name={'healthCheckSpecs[' + index + '].type'}
+                      name={fieldName + '[' + index + '].type'}
                       required={true}
                       layout={({ input }) => <>{input}</>}
+                      onChange={() => {
+                        this.forceUpdate();
+                      }}
                       input={props => <SelectInput {...props} options={['HTTP', 'TCP']} />}
                     />
                   </td>
                   <td>
                     <FormikFormField
-                      name={'healthCheckSpecs[' + index + '].port'}
+                      name={fieldName + '[' + index + '].port'}
                       required={true}
                       layout={({ input }) => <>{input}</>}
                       input={props => <NumberInput {...props} min={1} max={65534} />}
                     />
                   </td>
                   <td>
-                    {formik.values.healthCheckSpecs[index].type.indexOf('HTTP') === 0 && (
+                    {spec.type.indexOf('HTTP') === 0 && (
                       <FormikFormField
-                        name={'healthCheckSpecs[' + index + '].path'}
+                        name={fieldName + '[' + index + '].path'}
                         layout={({ input }) => <>{input}</>}
                         input={props => <TextInput {...props} />}
                         required={true}
                       />
                     )}
-                    {formik.values.healthCheckSpecs[index].type.indexOf('HTTP') !== 0 && <span>n/a</span>}
+                    {spec.type.indexOf('HTTP') !== 0 && <span>n/a</span>}
                   </td>
                   <td>
                     <FormikFormField
-                      name={'healthCheckSpecs[' + index + '].interval'}
+                      name={fieldName + '[' + index + '].interval'}
                       layout={({ input }) => <>Interval (sec) {input}</>}
                       input={props => <TextInput type="number" {...props} />}
                       required={true}
                     />
                     <FormikFormField
-                      name={'healthCheckSpecs[' + index + '].timeout'}
+                      name={fieldName + '[' + index + '].timeout'}
                       layout={({ input }) => <>Timeout (sec) {input}</>}
                       input={props => <TextInput type="number" {...props} />}
                       required={true}
@@ -94,13 +112,13 @@ export class HealthCheck extends React.Component<IHealthCheckProps> {
                   </td>
                   <td>
                     <FormikFormField
-                      name={'healthCheckSpecs[' + index + '].unhealthyThreshold'}
+                      name={fieldName + '[' + index + '].unhealthyThreshold'}
                       layout={({ input }) => <>Unhealthy {input}</>}
                       input={props => <TextInput {...props} />}
                       required={true}
                     />
                     <FormikFormField
-                      name={'healthCheckSpecs[' + index + '].healthyThreshold'}
+                      name={fieldName + '[' + index + '].healthyThreshold'}
                       layout={({ input }) => <>Healthy {input}</>}
                       input={props => <TextInput {...props} />}
                       required={true}

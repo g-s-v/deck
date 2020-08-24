@@ -1,12 +1,6 @@
 import { IArtifact } from 'core/domain';
 import { IYandexServerGroupCommand } from 'yandex/domain/configure/IYandexServerGroupCommand';
-import {
-  IAutoScalePolicy,
-  IDeployPolicy,
-  IHealthCheckSpec,
-  IInstanceTemplate,
-  ILoadBalancerIntegration,
-} from 'yandex/domain';
+import { IAutoScalePolicy, IDeployPolicy, IHealthCheckSpec, IInstanceTemplate, ITargetGroupSpec } from 'yandex/domain';
 
 export class YandexDeployConfiguration {
   account: string;
@@ -19,18 +13,19 @@ export class YandexDeployConfiguration {
   imageSource: string;
   applicationArtifact?: IYandexArtifact;
   zones: string[];
-  groupSize: number;
+  targetSize: number;
   serviceAccountId: string;
   autoScalePolicy: IAutoScalePolicy;
   deployPolicy: IDeployPolicy;
   instanceTemplate: IInstanceTemplate;
-  loadBalancerIntegration: ILoadBalancerIntegration;
+  targetGroupSpec: ITargetGroupSpec;
+  enableTraffic: boolean;
   healthCheckSpecs?: IHealthCheckSpec[];
+  balancers?: { [key: string]: IHealthCheckSpec[] };
   labels?: { [key: string]: string };
+  reason?: string;
 
   constructor(command: IYandexServerGroupCommand) {
-    // this.provider
-    // this.provider
     this.account = command.credentials;
     this.application = command.application;
     this.stack = command.stack;
@@ -40,14 +35,16 @@ export class YandexDeployConfiguration {
     this.imageSource = command.imageSource;
     this.applicationArtifact = command.applicationArtifact;
     this.zones = command.zones;
-    this.groupSize = command.groupSize;
+    this.targetSize = command.targetSize;
     this.serviceAccountId = command.serviceAccountId;
     this.autoScalePolicy = command.autoScalePolicy;
     this.deployPolicy = command.deployPolicy;
     this.instanceTemplate = command.instanceTemplate;
-    this.loadBalancerIntegration = command.loadBalancerIntegration;
     this.healthCheckSpecs = command.healthCheckSpecs;
     this.labels = command.labels;
+    this.reason = command.reason;
+    this.balancers = command.balancers;
+    this.enableTraffic = command.enableTraffic;
   }
 }
 

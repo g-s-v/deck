@@ -17,9 +17,17 @@ import { YandexServerGroupCommandBuilder } from './serverGroup/configure/serverG
 import { YandexServerGroupWizard } from 'yandex/serverGroup/configure';
 import { YandexImageReader } from './image';
 import 'yandex/pipeline/stages/bake/yandexBakeStage.module.ts';
+import 'yandex/pipeline/stages/cloneServerGroup/yandexCloneServerGroupStage.module';
+import 'yandex/pipeline/stages/destroyServerGroup/yandexDestroyServerGroupStage.module';
+import 'yandex/pipeline/stages/enableDisableServerGroup/yandexDisableSgStage.module';
+import 'yandex/pipeline/stages/enableDisableServerGroup/yandexEnableSgStage.module';
+import 'yandex/pipeline/stages/findImageFromTags/yandexFindImageFromTagsStage.module';
+import 'yandex/pipeline/stages/resizeServerGroup/yandexResizeServerGroupStage.module';
 import 'yandex/deploymentStrategy/rollingUpdate.strategy.ts';
 import { module } from 'angular';
 import { SUBNET_RENDERER } from 'yandex/subnet';
+import { YandexInstanceDetails } from 'yandex/instance/details';
+import { YandexLoadBalancerDetails, YandexLoadBalancerModal, YandexLoadBalancerTransformer } from 'yandex/loadBalancer';
 
 export const YANDEX_MODULE = 'spinnaker.yandex';
 module(YANDEX_MODULE, [SUBNET_RENDERER]).config(() => {
@@ -48,30 +56,20 @@ module(YANDEX_MODULE, [SUBNET_RENDERER]).config(() => {
       ],
       CloneServerGroupModal: YandexServerGroupWizard, // todo: fill
       commandBuilder: YandexServerGroupCommandBuilder, // todo: fill
-      scalingActivitiesEnabled: true,
+      scalingActivitiesEnabled: false,
     },
     subnet: {
       renderer: 'yandexSubnetRenderer',
     },
-    // instance: {
-    //   instanceTypeService: 'gceInstanceTypeService',
-    //   detailsTemplateUrl: require('./instance/details/instanceDetails.html'),
-    //   detailsController: 'gceInstanceDetailsCtrl',
-    //   multiInstanceTaskTransformer: 'gceMultiInstanceTaskTransformer',
-    //   customInstanceBuilderTemplateUrl: require('./serverGroup/configure/wizard/customInstance/customInstanceBuilder.html'),
-    // },
-    // instance: {
-    //   details: CloudFoundryInstanceDetails,
-    // },
-    // loadBalancer: {
-    //   transformer: 'gceLoadBalancerTransformer',
-    //   setTransformer: 'gceLoadBalancerSetTransformer',
-    //   detailsTemplateUrl: require('./loadBalancer/details/loadBalancerDetails.html'),
-    //   detailsController: 'gceLoadBalancerDetailsCtrl',
-    //   createLoadBalancerTemplateUrl: require('./loadBalancer/configure/choice/gceLoadBalancerChoice.modal.html'),
-    //   createLoadBalancerController: 'gceLoadBalancerChoiceCtrl',
-    // },
+    loadBalancer: {
+      transformer: YandexLoadBalancerTransformer,
+      details: YandexLoadBalancerDetails,
+      CreateLoadBalancerModal: YandexLoadBalancerModal,
+    },
+    instance: {
+      details: YandexInstanceDetails,
+    },
   });
 });
 
-DeploymentStrategyRegistry.registerProvider('yandex', ['custom', 'redblack', 'rollingupdate']);
+DeploymentStrategyRegistry.registerProvider('yandex', ['custom', 'rollingupdate']);

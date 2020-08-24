@@ -122,5 +122,6 @@ export interface IYandexServerGroup extends IServerGroup {
 
   instances: IYandexInstance[];
   loadBalancerIntegration: ILoadBalancerIntegration;
+  loadBalancersWithHealthChecks?: { [key: string]: IHealthCheckSpec[] };
   healthCheckSpecs?: IHealthCheckSpec[];
 }

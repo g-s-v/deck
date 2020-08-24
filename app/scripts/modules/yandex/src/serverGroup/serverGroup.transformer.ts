@@ -2,6 +2,7 @@ import { IPromise } from 'angular';
 
 import { IServerGroup } from 'core/domain';
 import { YandexDeployConfiguration } from 'yandex/domain/configure/YandexDeployConfiguration';
+import _ from 'lodash';
 
 export class YandexServerGroupTransformer {
   public static $inject = ['$q'];

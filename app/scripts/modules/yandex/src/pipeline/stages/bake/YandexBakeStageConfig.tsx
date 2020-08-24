@@ -17,7 +17,7 @@ export interface IYandexBakeStageState {
   optionsLoading: boolean;
 }
 
-export class YandexBakeStage extends React.Component<IStageConfigProps, IYandexBakeStageState> {
+export class YandexBakeStageConfig extends React.Component<IStageConfigProps, IYandexBakeStageState> {
   private destroy$ = new Subject();
 
   constructor(props: IStageConfigProps) {

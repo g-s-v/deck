@@ -43,7 +43,7 @@ interface ICloudfoundryDeployServiceStageConfigState {
   regions: IRegion[];
   accounts: IAccount[];
 }
-//todo: посмотреть зачем это тут и надо ли мне
+
 export class CloudfoundryDeployServiceStageConfig extends React.Component<
   IStageConfigProps,
   ICloudfoundryDeployServiceStageConfigState

@@ -43,6 +43,30 @@ export class YandexServerGroupCommandBuilder {
     return this.$q.when(command);
   }
 
+  public static buildCloneServerGroupCommandFromPipeline(
+    stage: IStage,
+    pipeline: IPipeline,
+  ): IYandexServerGroupCommand {
+    const command = this.buildNewServerGroupCommand({ name: pipeline.application } as Application, {
+      mode: 'editClonePipeline',
+    });
+    command.credentials = stage.credentials;
+    command.capacity = stage.capacity;
+    command.freeFormDetails = stage.freeFormDetails || command.freeFormDetails;
+    command.region = stage.region;
+    command.stack = stage.stack || command.stack;
+    command.strategy = stage.strategy;
+    command.source = stage.source;
+
+    command.viewState = {
+      ...command.viewState,
+      pipeline,
+      stage,
+    };
+
+    return command;
+  }
+
   public buildServerGroupCommandFromPipeline(
     application: Application,
     conf: YandexDeployConfiguration,
@@ -55,7 +79,7 @@ export class YandexServerGroupCommandBuilder {
       stack: conf.stack,
       freeFormDetails: conf.freeFormDetails,
       region: conf.region,
-      groupSize: conf.groupSize,
+      targetSize: conf.targetSize,
       strategy: conf.strategy,
       credentials: conf.account,
       imageSource: 'priorStage',
@@ -67,17 +91,18 @@ export class YandexServerGroupCommandBuilder {
         disableStrategySelection: false,
         disableImageSelection: true,
         showImageSourceSelector: true,
-        // imageSourceText: 'priorStage',
       },
       serviceAccountId: conf.serviceAccountId,
-      // capacity: _.cloneDeep(conf.capacity),
       deployPolicy: _.cloneDeep(conf.deployPolicy),
       labels: _.cloneDeep(conf.labels),
       instanceTemplate: _.cloneDeep(conf.instanceTemplate),
       healthCheckSpecs: _.cloneDeep(conf.healthCheckSpecs),
-      loadBalancerIntegration: _.cloneDeep(conf.loadBalancerIntegration),
+      targetGroupSpec: _.cloneDeep(conf.targetGroupSpec),
+      enableTraffic: _.cloneDeep(conf.enableTraffic),
+      balancers: _.cloneDeep(conf.balancers),
       autoScalePolicy: _.cloneDeep(conf.autoScalePolicy),
       zones: _.cloneDeep(conf.zones),
+      reason: conf.reason,
     } as IYandexServerGroupCommand;
 
     return this.$q.when(command);
@@ -88,6 +113,13 @@ export class YandexServerGroupCommandBuilder {
     serverGroup: IYandexServerGroup,
     mode = 'clone',
   ): IYandexServerGroupCommand {
+    let enableTraffic = false;
+    if (
+      serverGroup.loadBalancerIntegration.targetGroupId != undefined &&
+      serverGroup.loadBalancerIntegration.targetGroupId != ''
+    ) {
+      enableTraffic = true;
+    }
     return {
       source: {
         asgName: serverGroup.name,
@@ -97,13 +129,13 @@ export class YandexServerGroupCommandBuilder {
       stack: serverGroup.stack,
       freeFormDetails: serverGroup.detail,
       region: 'ru-central1',
-      groupSize: serverGroup.capacity.desired,
+      targetSize: serverGroup.capacity.desired,
       strategy: '',
       credentials: app.defaultCredentials['yandex'] || YandexProviderSettings.defaults.account,
       viewState: {
         mode: mode || 'create',
         submitButtonLabel: this.extractSubmitButtonLabel(mode),
-        disableStrategySelection: false,
+        disableStrategySelection: true,
       },
       serviceAccountId: serverGroup.serviceAccountId,
       capacity: _.cloneDeep(serverGroup.capacity),
@@ -111,7 +143,9 @@ export class YandexServerGroupCommandBuilder {
       labels: _.cloneDeep(serverGroup.labels),
       instanceTemplate: _.cloneDeep(serverGroup.instanceTemplate),
       healthCheckSpecs: _.cloneDeep(serverGroup.healthCheckSpecs),
-      loadBalancerIntegration: _.cloneDeep(serverGroup.loadBalancerIntegration),
+      targetGroupSpec: _.cloneDeep(serverGroup.loadBalancerIntegration.targetGroupSpec),
+      balancers: _.cloneDeep(serverGroup.loadBalancersWithHealthChecks),
+      enableTraffic: enableTraffic,
       autoScalePolicy: _.cloneDeep(serverGroup.autoScalePolicy),
       zones: _.cloneDeep(serverGroup.zones),
     } as IYandexServerGroupCommand;
@@ -142,7 +176,8 @@ export class YandexServerGroupCommandBuilder {
       stack: '',
       freeFormDetails: '',
       region: 'ru-central1',
-      groupSize: 1,
+      targetSize: 1,
+      enableTraffic: true,
       strategy: '',
       credentials: credentials,
       viewState: {
@@ -150,22 +185,18 @@ export class YandexServerGroupCommandBuilder {
         submitButtonLabel: submitButtonLabel,
         disableStrategySelection: true,
       },
-      capacity: {
-        min: 0,
-        max: 0,
-        desired: 1,
-      },
       deployPolicy: {
         maxUnavailable: 1,
         startupDuration: 0,
       },
       labels: {},
+      healthCheckSpecs: [],
       instanceTemplate: {
-        platformId: 'standard-v2',
+        platformId: 'standard-v1',
         labels: {},
         metadata: {},
         resourcesSpec: {
-          cores: 1,
+          cores: 2,
           memory: 2,
           coreFraction: 100,
         },
@@ -182,32 +213,6 @@ export class YandexServerGroupCommandBuilder {
           },
         ],
       },
-
-      //todo:
-      // imageSource: 'priorStage'
-      // viewState:
-      //   useSimpleCapacity: !serverGroup.autoscalingPolicy
-      //   disableStrategySelection: true
-      //   pipeline: pipeline
-      //   requiresTemplateSelection: true
-      //   stage: currentStage
-      // stack: moniker.stack
-      // freeFormDetails: moniker.detail
-
-      //   const { viewState } = command;
-      //     const baseCommand = this.props.command;
-      //     viewState.disableImageSelection = true;
-      //     viewState.showImageSourceSelector = true;
-      //     viewState.disableStrategySelection = baseCommand.viewState.disableStrategySelection || false;
-      //     viewState.expectedArtifacts = baseCommand.viewState.expectedArtifacts || [];
-      //     viewState.imageId = null;
-      //     viewState.readOnlyFields = baseCommand.viewState.readOnlyFields || {};
-      //     viewState.submitButtonLabel = 'Add';
-      //     viewState.hideClusterNamePreview = baseCommand.viewState.hideClusterNamePreview || false;
-      //     viewState.templatingEnabled = true;
-      //     viewState.imageSourceText = baseCommand.viewState.imageSourceText;
-      //     Object.assign(command, baseCommand.viewState.overrides || {});
-      //     Object.assign(baseCommand, command);
     } as IYandexServerGroupCommand;
   }
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Dropdown } from 'react-bootstrap';
-import { filter, find, get, orderBy } from 'lodash';
+import { filter, find, orderBy } from 'lodash';
 
 import {
   ConfirmationModalService,
@@ -15,6 +15,8 @@ import {
 import { IYandexServerGroup } from 'yandex/domain';
 import { YandexServerGroupCommandBuilder } from 'yandex/serverGroup/configure/serverGroup.commandBuilder';
 import { YandexServerGroupWizard } from 'yandex/serverGroup/configure';
+import { YandexResizeServerGroupModal } from 'yandex/serverGroup/details/resize/YandexResizeServerGroupModal';
+import { YandexRollbackServerGroupModal } from './rollback/YandexRollbackServerGroupModal';
 
 export interface IYandexServerGroupActionsProps extends IServerGroupActionsProps {
   serverGroup: IYandexServerGroup;
@@ -25,20 +27,29 @@ export interface ICloudFoundryServerGroupJob extends IServerGroupJob {
 }
 
 export class YandexServerGroupActions extends React.Component<IYandexServerGroupActionsProps> {
-  private isEnableLocked(): boolean {
-    if (this.props.serverGroup.isDisabled) {
-      const resizeTasks = (this.props.serverGroup.runningTasks || []).filter(task =>
-        get(task, 'execution.stages', []).some(stage => stage.type === 'resizeServerGroup'),
-      );
-      if (resizeTasks.length) {
-        return true;
-      }
+  private isRollbackEnabled(): boolean {
+    const { app, serverGroup } = this.props;
+
+    if (!serverGroup.isDisabled) {
+      // enabled server groups are always a candidate for rollback
+      return true;
     }
-    return false;
+
+    // if the server group selected for rollback is disabled, ensure that at least one enabled server group exists
+    return app
+      .getDataSource('serverGroups')
+      .data.some(
+        (g: IYandexServerGroup) =>
+          g.cluster === serverGroup.cluster &&
+          g.region === serverGroup.region &&
+          g.account === serverGroup.account &&
+          !g.isDisabled,
+      );
   }
 
-  private isRollbackEnabled(): boolean {
-    return !this.props.serverGroup.isDisabled;
+  private isTrafficEnabled(): boolean {
+    const { serverGroup } = this.props;
+    return !serverGroup.isDisabled && serverGroup.loadBalancerIntegration.targetGroupId != '';
   }
 
   private destroyServerGroup = (): void => {
@@ -195,30 +206,20 @@ export class YandexServerGroupActions extends React.Component<IYandexServerGroup
       region: serverGroup.region,
     }) as IYandexServerGroup[];
 
-    // CloudFoundryRollbackServerGroupModal.show({
-    //   serverGroup,
-    //   previousServerGroup,
-    //   disabledServerGroups: disabledServerGroups.sort((a, b) => b.name.localeCompare(a.name)),
-    //   allServerGroups: allServerGroups.sort((a, b) => b.name.localeCompare(a.name)),
-    //   application: app,
-    // });
+    YandexRollbackServerGroupModal.show({
+      serverGroup,
+      previousServerGroup,
+      disabledServerGroups: disabledServerGroups.sort((a, b) => b.name.localeCompare(a.name)),
+      allServerGroups: allServerGroups.sort((a, b) => b.name.localeCompare(a.name)),
+      application: app,
+    });
   };
 
   private resizeServerGroup = (): void => {
-    //   const { app, serverGroup } = this.props;
-    //   CloudFoundryResizeServerGroupModal.show({ application: app, serverGroup });
+    const { app, serverGroup } = this.props;
+    YandexResizeServerGroupModal.show({ application: app, serverGroup });
   };
 
-  // private mapServerGroupToLoadBalancers = (): void => {
-  //   const { app, serverGroup } = this.props;
-  //   CloudFoundryMapLoadBalancersModal.show({ application: app, serverGroup });
-  // };
-  //
-  // private unmapServerGroupFromLoadBalancers = (): void => {
-  //   const { app, serverGroup } = this.props;
-  //   CloudFoundryUnmapLoadBalancersModal.show({ application: app, serverGroup });
-  // };
-  //
   private cloneServerGroup = (): void => {
     const { app, serverGroup } = this.props;
     YandexServerGroupWizard.show({
@@ -229,29 +230,24 @@ export class YandexServerGroupActions extends React.Component<IYandexServerGroup
   };
 
   public render(): JSX.Element {
-    // const { app, serverGroup } = this.props;
     const { serverGroup } = this.props;
-    // const { loadBalancers } = serverGroup;
-
     return (
       <Dropdown className="dropdown" id="server-group-actions-dropdown">
         <Dropdown.Toggle className="btn btn-sm btn-primary dropdown-toggle">Server Group Actions</Dropdown.Toggle>
         <Dropdown.Menu className="dropdown-menu">
-          {!serverGroup.isDisabled && (
+          {this.isRollbackEnabled() && (
             <li>
               <a className="clickable" onClick={this.rollbackServerGroup}>
                 Rollback
               </a>
             </li>
           )}
-          {!serverGroup.isDisabled && (
-            <li>
-              <a className="clickable" onClick={this.resizeServerGroup}>
-                Resize
-              </a>
-            </li>
-          )}
-          {!serverGroup.isDisabled && (
+          <li>
+            <a className="clickable" onClick={this.resizeServerGroup}>
+              Resize
+            </a>
+          </li>
+          {this.isTrafficEnabled() && (
             <li>
               <a className="clickable" onClick={this.disableServerGroup}>
                 Disable
@@ -275,16 +271,6 @@ export class YandexServerGroupActions extends React.Component<IYandexServerGroup
               Clone
             </a>
           </li>
-          {/*{!serverGroup.isDisabled && <li>*/}
-          {/*  <a className="clickable" onClick={this.mapServerGroupToLoadBalancers}>Map Load Balancer</a>*/}
-          {/*</li>}*/}
-          {/*{!serverGroup.isDisabled && loadBalancers && !!loadBalancers.length && (*/}
-          {/*  <li>*/}
-          {/*    <a className="clickable" onClick={this.unmapServerGroupFromLoadBalancers}>*/}
-          {/*      Unmap Load Balancer*/}
-          {/*    </a>*/}
-          {/*  </li>*/}
-          {/*)}*/}
         </Dropdown.Menu>
       </Dropdown>
     );
