@@ -1,6 +1,6 @@
 import { FormikProps } from 'formik';
 import { IYandexServerGroupCommand } from 'yandex/domain/configure/IYandexServerGroupCommand';
-import { FormikFormField, ReactSelectInput, TextInput } from 'core/presentation';
+import { FormikFormField, ReactSelectInput, TextInput } from '@spinnaker/core';
 import * as React from 'react';
 import { IAttachedDiskSpec } from 'yandex/domain';
 import { IYandexImage } from 'yandex/image';

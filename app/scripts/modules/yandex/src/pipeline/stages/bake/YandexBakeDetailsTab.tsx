@@ -16,8 +16,14 @@
 
 import * as React from 'react';
 
-import { IExecutionDetailsSectionProps, StageExecutionLogs, StageFailureMessage } from 'core/pipeline';
-import { ExecutionDetailsSection, SETTINGS } from '@spinnaker/core';
+import {
+  IExecutionDetailsSectionProps,
+  StageExecutionLogs,
+  StageFailureMessage,
+  ExecutionDetailsSection,
+  SETTINGS,
+} from '@spinnaker/core';
+
 import { $interpolate } from 'ngimport';
 
 export class YandexBakeDetailsTab extends React.Component<IExecutionDetailsSectionProps> {

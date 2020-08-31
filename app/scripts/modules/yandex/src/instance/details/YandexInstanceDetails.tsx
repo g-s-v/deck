@@ -29,7 +29,7 @@ import {
 
 import { flattenDeep } from 'lodash';
 import { IYandexInstance } from 'yandex/domain';
-import { YandexInstanceDetailsSection } from 'yandex/instance/details/sections';
+import { YandexInstanceDetailsSection } from './sections';
 
 interface InstanceFromStateParams {
   instanceId: string;

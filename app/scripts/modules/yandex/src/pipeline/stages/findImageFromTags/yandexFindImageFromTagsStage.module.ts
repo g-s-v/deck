@@ -15,8 +15,8 @@
  */
 
 import { ExecutionDetailsTasks, IStage, Registry } from '@spinnaker/core';
-import { YandexFindImageFromTagsStageConfig } from 'yandex/pipeline/stages/findImageFromTags/YandexFindImageFromTagsStageConfig';
-import { YandexFindImageFromTagsDetailsTab } from 'yandex/pipeline/stages/findImageFromTags/YandexFindImageFromTagsDetailsTab';
+import { YandexFindImageFromTagsStageConfig } from './YandexFindImageFromTagsStageConfig';
+import { YandexFindImageFromTagsDetailsTab } from './YandexFindImageFromTagsDetailsTab';
 
 Registry.pipeline.registerStage({
   key: 'findImageFromTags',

@@ -13,9 +13,9 @@ import {
 } from '@spinnaker/core';
 
 import { IYandexServerGroup } from 'yandex/domain';
-import { YandexServerGroupCommandBuilder } from 'yandex/serverGroup/configure/serverGroup.commandBuilder';
-import { YandexServerGroupWizard } from 'yandex/serverGroup/configure';
-import { YandexResizeServerGroupModal } from 'yandex/serverGroup/details/resize/YandexResizeServerGroupModal';
+import { YandexServerGroupCommandBuilder } from '../configure/serverGroup.commandBuilder';
+import { YandexServerGroupWizard } from '../configure';
+import { YandexResizeServerGroupModal } from './resize/YandexResizeServerGroupModal';
 import { YandexRollbackServerGroupModal } from './rollback/YandexRollbackServerGroupModal';
 
 export interface IYandexServerGroupActionsProps extends IServerGroupActionsProps {
@@ -49,7 +49,11 @@ export class YandexServerGroupActions extends React.Component<IYandexServerGroup
 
   private isTrafficEnabled(): boolean {
     const { serverGroup } = this.props;
-    return !serverGroup.isDisabled && serverGroup.loadBalancerIntegration.targetGroupId != '';
+    return (
+      !serverGroup.isDisabled &&
+      serverGroup.loadBalancerIntegration != undefined &&
+      serverGroup.loadBalancerIntegration.targetGroupId != ''
+    );
   }
 
   private destroyServerGroup = (): void => {

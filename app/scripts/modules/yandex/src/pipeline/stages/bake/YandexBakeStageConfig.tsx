@@ -1,18 +1,33 @@
-import { BakeryReader, IStageConfigProps, StageConfigField } from 'core/pipeline';
+import {
+  BakeryReader,
+  FormikStageConfig,
+  IStageConfigProps,
+  ArtifactIcon,
+  CheckboxInput,
+  ExpectedArtifactService,
+  MapEditorInput,
+  ReactSelectInput,
+  TextInput,
+  FormikFormField,
+  HelpField,
+  IExpectedArtifact,
+} from '@spinnaker/core';
 
-import { BakeryReader, FormikStageConfig, IStageConfigProps } from 'core/pipeline';
-
-import { ArtifactIcon, CheckboxInput, ReactSelectInput, TextInput } from '@spinnaker/core';
 import * as React from 'react';
 import { Observable, Subject } from 'rxjs';
-import { IBaseOsOption } from 'core/pipeline/config/stages/bake/bakeStageChooseOs.component';
-import { FormikStageConfig } from '../../../../../core/src/pipeline';
-import { FormikFormField } from '../../../../../core/src/presentation/forms/fields';
-import { HelpField } from '../../../../../core/src/help';
-import { TextInput } from '../../../../../core/src/presentation/forms/inputs';
-import { SETTINGS } from '../../../../../core/src/config';
+import Select, { Option } from 'react-select';
+import { find, map } from 'lodash';
+
+export interface IBaseOsOption {
+  id: string;
+  shortDescription?: string;
+  detailedDescription: string;
+  isImageFamily?: boolean;
+  displayName?: string;
+}
 
 export interface IYandexBakeStageState {
+  expectedArtifacts: IExpectedArtifact[];
   baseOsOptions: IBaseOsOption[];
   optionsLoading: boolean;
 }
@@ -25,6 +40,7 @@ export class YandexBakeStageConfig extends React.Component<IStageConfigProps, IY
     props.stage.cloudProvider = 'yandex';
     props.stage.region = 'ru-central1';
     this.state = {
+      expectedArtifacts: ExpectedArtifactService.getExpectedArtifactsAvailableToStage(props.stage, props.pipeline),
       baseOsOptions: [],
       optionsLoading: true,
     };
@@ -46,36 +62,35 @@ export class YandexBakeStageConfig extends React.Component<IStageConfigProps, IY
           }),
           optionsLoading: false,
         });
-        // this.props.updateStageField({baseOs: baseOsOptions.baseImages[0].id});
       });
-    // scope.viewState.providerSelected = true;
-
-    // expectedArtifacts: ExpectedArtifactService.getExpectedArtifactsAvailableToStage(
-    //   $scope.stage,
-    //   $scope.pipeline,
-    // ),
-
-    // $scope.viewState.roscoMode =
-    //   SETTINGS.feature.roscoMode ||
-    //   (typeof SETTINGS.feature.roscoSelector === 'function' && SETTINGS.feature.roscoSelector($scope.stage));
-    // $scope.showAdvancedOptions = showAdvanced();
-    // $scope.viewState.loading = false;
   }
 
   public componentWillUnmount(): void {
     this.destroy$.next();
   }
 
-  // $scope.viewState = {
-  //   loading: true,
-  // };
-  private rebakeChange(checked: boolean) {}
+  private renderArtifact = (option: Option<string>) => {
+    const artifact = find(this.state.expectedArtifacts, a => a.id === option.value);
+    if (!artifact) {
+      return null;
+    }
+    return (
+      <span>
+        <ArtifactIcon
+          type={
+            (artifact.matchArtifact && artifact.matchArtifact.type) ||
+            (artifact.defaultArtifact && artifact.defaultArtifact.type)
+          }
+          width="16"
+          height="16"
+        />
+        {artifact.displayName}
+      </span>
+    );
+  };
 
   public render() {
-    const { PipelineBakeStageChooseOs } = NgReact;
-    const { baseOsOptions, optionsLoading } = this.state;
-    const { stage } = this.props;
-    const { baseOs, rebake } = stage;
+    const { baseOsOptions, optionsLoading, expectedArtifacts } = this.state;
 
     return (
       <div>
@@ -92,13 +107,35 @@ export class YandexBakeStageConfig extends React.Component<IStageConfigProps, IY
                   <ReactSelectInput
                     {...props}
                     isLoading={optionsLoading}
-                    options={
-                      baseOsOptions &&
-                      baseOsOptions.map(option => ({
-                        value: option.id,
-                        label: option.detailedDescription,
-                      }))
-                    }
+                    options={map(baseOsOptions, o => ({
+                      value: o.id,
+                      label: o.detailedDescription,
+                    }))}
+                  />
+                )}
+              />
+              <FormikFormField
+                name="package"
+                label="Package"
+                help={<HelpField id="pipeline.config.bake.package" />}
+                input={props => <TextInput {...props} inputClassName={'form-control input-sm'} />}
+              />
+              <FormikFormField
+                name="packageArtifactIds"
+                label="Package Artifacts"
+                help={<HelpField id="pipeline.config.bake.packageArtifacts" />}
+                input={props => (
+                  <Select
+                    {...props}
+                    clearable={true}
+                    multi={true}
+                    options={map(expectedArtifacts, a => ({
+                      label: a.displayName,
+                      value: a.id,
+                    }))}
+                    optionRenderer={this.renderArtifact}
+                    placeholder="Select an artifact..."
+                    valueRenderer={this.renderArtifact}
                   />
                 )}
               />
@@ -109,21 +146,25 @@ export class YandexBakeStageConfig extends React.Component<IStageConfigProps, IY
                   <CheckboxInput {...props} text={'Rebake image without regard to the status of any existing bake'} />
                 )}
               />
+              <FormikFormField
+                name="templateFileName"
+                label="Template File Name"
+                input={props => <TextInput {...props} inputClassName={'form-control input-sm'} />}
+              />
+              <div className="sp-margin-m-bottom">
+                <div className="sm-label-center">
+                  <b>Extended Attributes</b>
+                </div>
+                <FormikFormField
+                  name="extendedAttributes"
+                  input={props => (
+                    <MapEditorInput {...props} allowEmptyValues={true} addButtonLabel="Add Extended Attribute" />
+                  )}
+                />
+              </div>
             </div>
           )}
         />
-
-        {/*<PipelineBakeStageChooseOs*/}
-        {/*  model={{ baseOs }}*/}
-        {/*  baseOsOptions={baseOsOptions}*/}
-        {/*  // onChange={t => this.props.updateStageField(t)}*/}
-        {/* />*/}
-        {/*<StageConfigField label="Rebake">*/}
-        {/*  <CheckboxInput*/}
-        {/*    onChange={checked => this.props.updateStageField({ rebake: checked })}*/}
-        {/*    checked={rebake} */}
-        {/*    text={"Rebake image without regard to the status of any existing bake"}/>*/}
-        {/*</StageConfigField>*/}
       </div>
     );
   }

@@ -20,11 +20,8 @@ import { UIRouterContext } from '@uirouter/react-hybrid';
 
 import { Application, LoadBalancerWriter, Spinner } from '@spinnaker/core';
 import { IYandexLoadBalancer } from 'yandex/domain/IYandexLoadBalancer';
-import {
-  YandexLoadBalancerDetailsSection,
-  YandexLoadBalancerStatusSection,
-} from 'yandex/loadBalancer/details/sections';
-import { YandexLoadBalancerActions } from 'yandex/loadBalancer/details/YandexLoadBalancerActions';
+import { YandexLoadBalancerDetailsSection, YandexLoadBalancerStatusSection } from './sections';
+import { YandexLoadBalancerActions } from './YandexLoadBalancerActions';
 
 interface ILoadBalancer {
   name: string;

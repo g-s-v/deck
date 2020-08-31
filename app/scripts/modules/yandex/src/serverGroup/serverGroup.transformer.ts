@@ -1,6 +1,6 @@
 import { IPromise } from 'angular';
 
-import { IServerGroup } from 'core/domain';
+import { IServerGroup } from '@spinnaker/core';
 import { YandexDeployConfiguration } from 'yandex/domain/configure/YandexDeployConfiguration';
 import _ from 'lodash';
 

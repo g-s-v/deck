@@ -33,7 +33,7 @@ import {
   StageConstants,
   TextInput,
 } from '@spinnaker/core';
-import { AccountClusterSelector } from 'yandex/pipeline/stages/common/AccountClusterSelector';
+import { AccountClusterSelector } from '../common/AccountClusterSelector';
 import { Observable, Subject } from 'rxjs';
 import { IServerGroupCommand } from '@spinnaker/core';
 

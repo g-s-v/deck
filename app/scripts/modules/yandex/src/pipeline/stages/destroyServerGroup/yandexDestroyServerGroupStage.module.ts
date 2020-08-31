@@ -15,7 +15,7 @@
  */
 
 import { IStage, Registry } from '@spinnaker/core';
-import { YandexServerGroupStageConfig } from 'yandex/pipeline/stages/common/YandexServerGroupStageConfig';
+import { YandexServerGroupStageConfig } from '../common/YandexServerGroupStageConfig';
 
 Registry.pipeline.registerStage({
   accountExtractor: (stage: IStage) => [stage.context.credentials],

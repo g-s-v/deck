@@ -16,8 +16,8 @@
 
 import * as React from 'react';
 
-import { IExecutionDetailsSectionProps, StageFailureMessage } from 'core/pipeline';
-import { ExecutionDetailsSection } from '@spinnaker/core';
+import { IExecutionDetailsSectionProps, StageFailureMessage, ExecutionDetailsSection } from '@spinnaker/core';
+
 import { IYandexImage } from 'yandex/image';
 
 export class YandexFindImageFromTagsDetailsTab extends React.Component<IExecutionDetailsSectionProps> {

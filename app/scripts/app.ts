@@ -18,7 +18,7 @@ import { AZURE_MODULE } from '@spinnaker/azure';
 import { HUAWEICLOUD_MODULE } from '@spinnaker/huaweicloud';
 import { TENCENTCLOUD_MODULE } from '@spinnaker/tencentcloud';
 // import { DCOS_DCOS_MODULE } from './modules/dcos/dcos.module';
-import { YANDEX_MODULE } from './modules/yandex/src';
+import { YANDEX_MODULE } from '@spinnaker/yandex';
 
 module('netflix.spinnaker', [
   CORE_MODULE,

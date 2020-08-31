@@ -16,4 +16,4 @@
 
 export * from './loadBalancer.transformer';
 export * from './details';
-export * from './configure/yandexLoadBalancerModal';
+export * from './configure/YandexLoadBalancerModal';

@@ -2,7 +2,7 @@ import { Application, IPipeline, IStage } from '@spinnaker/core';
 import { IPromise, IQService } from 'angular';
 import { IYandexServerGroup } from 'yandex/domain';
 import { IYandexServerGroupCommand } from 'yandex/domain/configure/IYandexServerGroupCommand';
-import { YandexProviderSettings } from 'yandex';
+import { YandexProviderSettings } from 'yandex/yandex.settings';
 import _ from 'lodash';
 import { YandexDeployConfiguration } from 'yandex/domain/configure/YandexDeployConfiguration';
 
@@ -115,6 +115,7 @@ export class YandexServerGroupCommandBuilder {
   ): IYandexServerGroupCommand {
     let enableTraffic = false;
     if (
+      serverGroup.loadBalancerIntegration != undefined &&
       serverGroup.loadBalancerIntegration.targetGroupId != undefined &&
       serverGroup.loadBalancerIntegration.targetGroupId != ''
     ) {
@@ -143,7 +144,10 @@ export class YandexServerGroupCommandBuilder {
       labels: _.cloneDeep(serverGroup.labels),
       instanceTemplate: _.cloneDeep(serverGroup.instanceTemplate),
       healthCheckSpecs: _.cloneDeep(serverGroup.healthCheckSpecs),
-      targetGroupSpec: _.cloneDeep(serverGroup.loadBalancerIntegration.targetGroupSpec),
+      targetGroupSpec:
+        serverGroup.loadBalancerIntegration != undefined
+          ? _.cloneDeep(serverGroup.loadBalancerIntegration.targetGroupSpec)
+          : undefined,
       balancers: _.cloneDeep(serverGroup.loadBalancersWithHealthChecks),
       enableTraffic: enableTraffic,
       autoScalePolicy: _.cloneDeep(serverGroup.autoScalePolicy),

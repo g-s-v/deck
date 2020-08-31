@@ -25,7 +25,7 @@ import {
   LoadBalancerWriter,
   ReactInjector,
 } from '@spinnaker/core';
-import { IYandexLoadBalancerModalProps, YandexLoadBalancerModal } from 'yandex/loadBalancer';
+import { IYandexLoadBalancerModalProps, YandexLoadBalancerModal } from '../configure/YandexLoadBalancerModal';
 import { IYandexLoadBalancer } from 'yandex/domain/IYandexLoadBalancer';
 
 export interface IYandexLoadBalancerActionsProps {

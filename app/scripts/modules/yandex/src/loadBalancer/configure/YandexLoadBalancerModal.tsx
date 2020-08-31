@@ -34,7 +34,7 @@ import { LoadBalancerLocation } from './LoadBalancerLocation';
 
 import './configure.less';
 import { IYandexLoadBalancer, IYandexLoadBalancerUpsertCommand } from 'yandex/domain/IYandexLoadBalancer';
-import { YandexLoadBalancerTransformer } from 'yandex/loadBalancer';
+import { YandexLoadBalancerTransformer } from '../loadBalancer.transformer';
 
 export interface IYandexLoadBalancerModalProps extends ILoadBalancerModalProps {
   loadBalancer: IYandexLoadBalancer;

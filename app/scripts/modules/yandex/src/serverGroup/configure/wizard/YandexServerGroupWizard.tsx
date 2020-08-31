@@ -14,9 +14,9 @@ import {
 } from '@spinnaker/core';
 
 import { IYandexServerGroupCommand } from 'yandex/domain/configure/IYandexServerGroupCommand';
-import { YandexServerGroupBasicSettings } from 'yandex/serverGroup/configure/wizard/sections/basicSettings/BasicSettings.yandex';
+import { YandexServerGroupBasicSettings } from './sections/basicSettings/BasicSettings.yandex';
 import * as React from 'react';
-import { ServerGroupTemplateSelection } from 'yandex/serverGroup/configure';
+import { ServerGroupTemplateSelection } from './ServerGroupTemplateSelection';
 import { YandexServerGroupDeployPolicySettings } from './sections/configurationSettings/DeployPolicySettings.yandex';
 import { YandexServerGroupInstanceTemplateSettings } from './sections/instanceTemplateSettings/InstanceTemplateSettings.yandex';
 import { YandexServerGroupAdvancedSettings } from './sections/advancedSettings/AdvancedSettings.yandex';

@@ -80,7 +80,7 @@ export class YandexLoadBalancerDetailsSection extends React.Component<IYandexLoa
                       <a href={'http://' + listener.address + ':' + listener.port}>
                         {listener.address + ':' + listener.port}
                       </a>{' '}
-                      => {listener.targetPort}
+                      =&gt; {listener.targetPort}
                     </dd>
                   </div>
                 );
