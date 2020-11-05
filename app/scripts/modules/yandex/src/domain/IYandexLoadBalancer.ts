@@ -5,6 +5,7 @@ export interface IYandexLoadBalancer extends ILoadBalancer {
   id: string;
   credentials?: string;
   balancerType: string;
+  regionZones?: string[];
   serverGroups: IYandexServerGroup[];
   listeners: IYandexLBListener[];
 }
@@ -21,6 +22,7 @@ export interface IYandexLBListener {
 
 export interface IYandexLoadBalancerUpsertCommand extends ILoadBalancerUpsertCommand {
   lbType: string;
+  regionZones?: string[];
   serverGroups: IYandexServerGroup[];
   listeners: IYandexLBListener[];
 }

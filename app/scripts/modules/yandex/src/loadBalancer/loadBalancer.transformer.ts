@@ -56,6 +56,7 @@ export class YandexLoadBalancerTransformer {
       cloudProvider: 'yandex',
       credentials: undefined,
       lbType: 'EXTERNAL',
+      regionZones: ['ru-central1'],
       listeners: [],
       serverGroups: [],
     } as IYandexLoadBalancerUpsertCommand;
@@ -71,6 +72,7 @@ export class YandexLoadBalancerTransformer {
       cloudProvider: loadBalancer.cloudProvider,
       credentials: loadBalancer.account,
       lbType: loadBalancer.balancerType,
+      regionZones: ['ru-central1'],
       detail: loadBalancer.detail,
       listeners: loadBalancer.listeners,
       serverGroups: loadBalancer.serverGroups,

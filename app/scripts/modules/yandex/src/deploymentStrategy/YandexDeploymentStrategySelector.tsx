@@ -27,23 +27,23 @@ import {
 } from '@spinnaker/core';
 import { IYandexServerGroupCommand } from 'yandex/domain/configure/IYandexServerGroupCommand';
 
-export interface ICloudFoundryDeploymentStrategySelectorProps {
+export interface IYandexDeploymentStrategySelectorProps {
   command: IServerGroupCommand;
   onFieldChange: (key: string, value: any) => void;
   onStrategyChange: (command: IServerGroupCommand, strategy: IDeploymentStrategy) => void;
 }
 
-export interface ICloudFoundryDeploymentStrategySelectorState {
+export interface IYandexDeploymentStrategySelectorState {
   strategies: IDeploymentStrategy[];
   currentStrategy: string;
   AdditionalFieldsComponent: React.ComponentType<IDeploymentStrategyAdditionalFieldsProps>;
 }
 
-export class CloudFoundryDeploymentStrategySelector extends React.Component<
-  ICloudFoundryDeploymentStrategySelectorProps,
-  ICloudFoundryDeploymentStrategySelectorState
+export class YandexDeploymentStrategySelector extends React.Component<
+  IYandexDeploymentStrategySelectorProps,
+  IYandexDeploymentStrategySelectorState
 > {
-  public state: ICloudFoundryDeploymentStrategySelectorState = {
+  public state: IYandexDeploymentStrategySelectorState = {
     strategies: [
       {
         label: 'None',

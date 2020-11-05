@@ -6,7 +6,6 @@ import {
   AccountService,
   Application,
   CheckboxInput,
-  DeploymentStrategySelector,
   FormikFormField,
   HelpField,
   IAccount,
@@ -23,6 +22,8 @@ import {
   TaskReason,
   TextInput,
 } from '@spinnaker/core';
+
+import { YandexDeploymentStrategySelector } from 'yandex/deploymentStrategy/YandexDeploymentStrategySelector';
 
 import { IYandexServerGroupCommand } from 'yandex/domain/configure/IYandexServerGroupCommand';
 import * as React from 'react';
@@ -330,8 +331,7 @@ export class YandexServerGroupBasicSettings
           </div>
 
           {!values.viewState.disableStrategySelection && values.selectedProvider && (
-            // todo: поменять на YandexDeploymentStrategySelector.tsx
-            <DeploymentStrategySelector
+            <YandexDeploymentStrategySelector
               command={values}
               onFieldChange={this.onStrategyFieldChange}
               onStrategyChange={this.strategyChanged}

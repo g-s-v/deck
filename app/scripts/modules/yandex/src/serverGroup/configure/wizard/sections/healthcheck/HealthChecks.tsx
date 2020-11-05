@@ -1,5 +1,3 @@
-import { FormikProps } from 'formik';
-
 import { FormikFormField, NumberInput, SelectInput, TextInput } from '@spinnaker/core';
 import { IHealthCheckSpec } from 'yandex/domain';
 import * as React from 'react';
